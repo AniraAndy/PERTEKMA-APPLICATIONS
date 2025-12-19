@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PERTEKMA APPLICATIONS 2025/2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="background-container">
+        <div class="overlay"></div>
+    </div>
+
+    <div class="container">
+
+        <div id="page-home" class="page-section active center-content">
+            <div class="brand-box">
+                <h1>PERSATUAN TEKNOLOGI MAKLUMAT</h1>
+                <h3>(PERTEKMA)</h3>
+                <p class="subtitle">Applications Portal 2025/2026</p>
+            </div>
+            <div class="menu-buttons">
+                <button class="btn btn-primary btn-large" onclick="navigateTo('page-search')">🔍 Search Applicants</button>
+                <button class="btn btn-primary btn-large" onclick="navigateTo('page-suggested')">⭐ Recommended by PERTEKMA</button>
+                <button class="btn btn-primary btn-large" onclick="navigateTo('page-reapplicants')">🔄 Previous Applicants</button>
+                <button class="btn btn-outline btn-large" onclick="navigateTo('page-full-list')">📄 View Full List</button>
+            </div>
+        </div>
+
+        <div id="page-search" class="page-section">
+            <div class="section-header">
+                <h2>Find an Applicant</h2>
+                <button class="btn-icon" onclick="navigateTo('page-home')">✕</button>
+            </div>
+            <div class="search-box-container">
+                <input type="text" id="searchInput" placeholder="Enter Name or Matric Number...">
+                <button class="btn btn-primary" onclick="performSearch()">Search</button>
+            </div>
+        </div>
+
+        <div id="page-suggested" class="page-section wide-panel">
+            <div class="section-header">
+                <h2>Recommended Candidates</h2>
+                <button class="btn-icon" onclick="navigateTo('page-home')">✕</button>
+            </div>
+            <div class="toolbar-container">
+                <div class="filter-row">
+                    <select id="recFilterYear" onchange="renderSuggested()"><option value="all">All Years</option></select>
+                    <select id="recFilterCourse" onchange="renderSuggested()"><option value="all">All Courses</option></select>
+                    <select id="recFilterPos" onchange="renderSuggested()"><option value="all">All Positions</option></select>
+                </div>
+                <div class="sort-row">
+                    <span>Sort:</span>
+                    <button class="btn-chip" onclick="setSort('rec', null)">Original</button>
+                    <button class="btn-chip" onclick="setSort('rec', 'name')">Name</button>
+                    <button class="btn-chip" onclick="setSort('rec', 'year')">Year</button>
+                    <button class="btn-chip" onclick="setSort('rec', 'course')">Course</button>
+                    <button class="btn-chip" onclick="setSort('rec', 'suggested')">Position</button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Matric</th>
+                            <th>Year</th>
+                            <th>Course</th>
+                            <th>Suggested Position</th>
+                            <th>Doc</th>
+                        </tr>
+                    </thead>
+                    <tbody id="suggestedTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="page-reapplicants" class="page-section wide-panel">
+            <div class="section-header">
+                <h2>Previous Applicants Reapplying</h2>
+                <button class="btn-icon" onclick="navigateTo('page-home')">✕</button>
+            </div>
+            <div class="toolbar-container">
+                <div class="filter-row">
+                    <select id="reFilterYear" onchange="renderReapplicants()"><option value="all">All Years</option></select>
+                    <select id="reFilterCourse" onchange="renderReapplicants()"><option value="all">All Courses</option></select>
+                    <select id="reFilterPos" onchange="renderReapplicants()"><option value="all">All Positions</option></select>
+                </div>
+                <div class="sort-row">
+                    <span>Sort:</span>
+                    <button class="btn-chip" onclick="setSort('re', null)">Original</button>
+                    <button class="btn-chip" onclick="setSort('re', 'name')">Name</button>
+                    <button class="btn-chip" onclick="setSort('re', 'year')">Year</button>
+                    <button class="btn-chip" onclick="setSort('re', 'course')">Course</button>
+                    <button class="btn-chip" onclick="setSort('re', 'applied')">Position</button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Matric</th>
+                            <th>Year</th>
+                            <th>Course</th>
+                            <th>Applied Position</th>
+                            <th>Resume</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reapplicantsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="page-full-list" class="page-section wide-panel">
+            <div class="section-header">
+                <h2>All Applicants</h2>
+                <button class="btn-icon" onclick="navigateTo('page-home')">✕</button>
+            </div>
+            <div class="toolbar-container">
+                <div class="filter-row">
+                    <select id="fullFilterYear" onchange="renderFullList()"><option value="all">All Years</option></select>
+                    <select id="fullFilterCourse" onchange="renderFullList()"><option value="all">All Courses</option></select>
+                    <select id="fullFilterPos" onchange="renderFullList()"><option value="all">All Positions</option></select>
+                </div>
+                <div class="sort-row">
+                    <span>Sort:</span>
+                    <button class="btn-chip" onclick="setSort('full', null)">Original</button>
+                    <button class="btn-chip" onclick="setSort('full', 'name')">Name</button>
+                    <button class="btn-chip" onclick="setSort('full', 'year')">Year</button>
+                    <button class="btn-chip" onclick="setSort('full', 'course')">Course</button>
+                    <button class="btn-chip" onclick="setSort('full', 'applied')">Position</button>
+                    <button class="btn btn-success btn-sm" onclick="downloadExcel()" style="margin-left:auto">Download Excel</button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Matric</th>
+                            <th>Year</th>
+                            <th>Course</th>
+                            <th>Applied Position</th>
+                            <th>Resume</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fullListTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="page-details" class="page-section">
+            <div class="section-header">
+                <h2>Applicant Profile</h2>
+                <button class="btn-icon" onclick="goBack()">✕</button>
+            </div>
+            <div class="detail-card" id="detailContent"></div>
+            <div class="action-footer">
+                <a id="downloadLink" href="#" target="_blank" class="btn btn-primary">View Documents</a>
+            </div>
+        </div>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
